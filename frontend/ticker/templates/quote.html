@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load static %}    
+{% block title %}
+Quote : {{ x.symbol }} - {{ block.super }}
+{% endblock title %}
+{% block content %}
+<style>
+	.borderless td, .borderless th {
+	border: none;
+	} 
+</style>
+<div class="jumbotron">
+	<center>
+		<h2 class="display-4">{{x.companyName}}</h2>
+	</center>
+	<div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
+		<table class='table borderless'>
+			<tr>
+				<td><b>Symbol :</b> {{x.symbol}}</td>
+				<td><b>Series :</b> {{x.series}}</td>
+				<td><b>ISIN :</b> {{x.isinCode}}</td>
+				<td><b>Status :</b> {{x.css_status_desc}}</td>
+			</tr>
+		</table>
+	</div>
+	<hr class="my-4">
+	<div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
+		<table class='table borderless'>
+			<tr>
+				<td colspan="2">
+					<h3>
+						<center><strong>Current Price</strong><br><br>{{x.lastPrice}}
+					</h3>
+					</center>
+				</td>
+				<td colspan="2">
+					<h3>
+						<center><strong>Predicted Price</strong><br><br>{{x.lastPrice}}
+					</h3>
+					</center>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<center>Change</center>
+				</th>
+				<th>
+					<center>% Change</center>
+				</th>
+				<th>
+					<center>P. Change</center>
+				</th>
+				<th>
+					<center>P. % Change</center>
+				</th>
+			</tr>
+			<tr>
+				{% if changeQuote > 0 %}
+				<td style="color:green">
+					<center><img src="{% static "/images/arrow_ticker_up.gif" %}">&nbsp;{{x.change}}</center>
+				</td>
+				<td style="color:green">
+					<center>{{x.pChange}} %</center>
+				</td>
+				<td style="color:green">
+					<center><img src="{% static "/images/arrow_ticker_up.gif" %}">&nbsp;{{x.change}}</center>
+				</td>
+				<td style="color:green">
+					<center>{{x.pChange}} %</center>
+				</td>
+				{% else %}
+				<td style="color:red">
+					<center><img src="{% static "/images/arrow_ticker_down.gif" %}">&nbsp;{{x.change}}</center>
+				</td>
+				<td style="color:red">
+					<center>{{x.pChange}} %</center>
+				</td>
+				<td style="color:red">
+					<center><img src="{% static "/images/arrow_ticker_down.gif" %}">&nbsp;{{x.change}}</center>
+				</td>
+				<td style="color:red">
+					<center>{{x.pChange}} %</center>
+				</td>
+				{% endif %}  
+			</tr>
+		</table>
+	</div>
+</div>
+
+
+
+<div class="card-title">
+	<center>
+		<h2> In The News </h2>
+	</center>
+	<div class="card-columns">
+		{% for x in quoteNews.articles %}
+		<div class="card">
+			<img class="card-img-top" src="{{x.urlToImage}}">
+			<div class="card-body">
+				<h5 class="card-title">{{x.title}}</h5>
+				<p class="card-text">{{x.description}}</p>
+				<a href="{{x.url}}" class="btn btn-primary">Read More</a>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+</div>
+<br/>
+{% endblock %}

@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+
+
+{% endblock meta %}
+
+{% block title %}
+
+Team - {{ block.super }}
+
+{% endblock title %}
+{% block content %}
+<section class="jumbotron text-center">
+    <div class="container">
+      <h1 class="jumbotron-heading">The Team</h1>
+      <p class="lead text-muted">"Teamwork is the ability to work together toward a common vision. The ability to direct individual accomplishments toward organizational objectives. It is the fuel that allows common people to attain uncommon results." - Andrew Carnegie</p>
+      <p>
+        <a href="mailto:mailto:dishantrathi97@gmail.com?subject=Exploring Opportuninty" class="btn btn-primary my-2">Contact Us</a>
+        <a href="mailto:mailto:dishantrathi97@gmail.com?subject=Bugs Found" class="btn btn-secondary my-2">Report Bugs</a>
+      </p>
+    </div>
+  </section>
+<div class="container">
+
+<style>
+      body {
+        background-color: transparent;
+      }
+      
+      .card-profile {
+        width: 340px;
+        margin: 50px auto;
+        background-color: #e6e5e1;
+        border-radius: 0;
+        border: 0;
+        box-shadow: 1em 1em 2em rgba(0, 0, 0, 0.2);
+      }
+      .card-profile .card-img-top {
+        border-radius: 0;
+      }
+      .card-profile .card-img-profile {
+        max-width: 100%;
+        border-radius: 50%;
+        margin-top: -95px;
+        margin-bottom: 35px;
+        border: 5px solid #e6e5e1;
+      }
+      .card-profile .card-title {
+        margin-bottom: 50px;
+      }
+      .card-profile .card-title small {
+        display: block;
+        font-size: 0.6em;
+        margin-top: 0.2em;
+      }
+      .card-profile .card-links {
+        margin-bottom: 25px;
+      }
+      .card-profile .card-links .fa {
+        margin: 0 1em;
+        font-size: 1.6em;
+      }
+      .card-profile .card-links .fa:focus, .card-profile .card-links .fa:hover {
+        text-decoration: none;
+      }
+      .card-profile .card-links .fa.fa-dribbble {
+        color: #091f68;
+        font-weight: bold;
+      }
+      .card-profile .card-links .fa.fa-dribbble:hover {
+        color: #010511;
+      }
+      .card-profile .card-links .fa.fa-twitter {
+        color: #68aade;
+      }
+      .card-profile .card-links .fa.fa-twitter:hover {
+        color: #3e92d5;
+      }
+      .card-profile .card-links .fa.fa-facebook {
+        color: #3b5999;
+      }
+      .card-profile .card-links .fa.fa-facebook:hover {
+        color: #2d4474;
+      }
+      .card-profile .card-links .fa.fa-github {
+        color: #3a3b3b;
+      }
+      .card-profile .card-links .fa.fa-github:hover {
+        color: #24292e;
+      }
+      .card-profile .card-links .fa.fa-skype {
+        color: #5ea5d4;
+      }
+      .card-profile .card-links .fa.fa-skype:hover {
+        color: #0078ca;
+      }
+
+      
+</style>
+
+<div class="container">
+
+<div class="row">
+
+<div class='card card-profile text-center'>
+  <img alt='' class='card-img-top' src='data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==' height="160" width="340">
+  <div class='card-block'>
+    <img alt='' class='card-img-profile' src='https://it.gravatar.com/userimage/3434071/205a00fc16ae537b26b56f40790910fe.jpg?size=140'>
+    <h4 class='card-title'>
+      Dishant Rathi
+      <small>Back-End Python Developer</small>
+    </h4>
+    <div class='card-links'>
+      
+      <a class='fa fa-dribbble' href='https://dishantrathi.tk/'></a>          
+      <a class='fa fa-github' href='https://github.com/dishantrathi'></a>
+      <a class='fa fa-linkedin' href='https://www.linkedin.com/in/dishantrathi'></a>
+      <a class='fa fa-twitter' href='https://twitter.com/techiedishant'></a>
+      <a class='fa fa-skype' href='https://medium.com/@dishantrathi'></a>  
+      <a class='fa fa-facebook' href='https://www.facebook.com/dishantrathi'></a>
+      <a class='fa fa-envelope' href='mailto:dishantrathi97@gmail.com'></a>
+    </div>
+  </div>
+</div>
+<div class='card card-profile text-center'>  
+        <img alt='' class='card-img-top' src='data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==' height="160" width="340">
+  <div class='card-block'>
+    <img alt='' class='card-img-profile' src='https://it.gravatar.com/userimage/3434071/205a00fc16ae537b26b56f40790910fe.jpg?size=140'>
+    <h4 class='card-title'>
+      Deep Patel
+      <small>Back-End Python Developer</small>
+    </h4>
+    <div class='card-links'>
+      <a class='fa fa-github' href='#'></a>
+      <a class='fa fa-linkedin' href='#'></a>
+      <a class='fa fa-twitter' href='https://twitter.com/deeppatel240498'></a>
+      <a class='fa fa-facebook' href='https://www.facebook.com/deeppatel2404'></a>
+      <a class='fa fa-envelope' href='mailto:deeppatel240498@gmail.com'></a>
+    </div>
+  </div>
+</div>
+<div class='card card-profile text-center'>
+        <img alt='' class='card-img-top' src='data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==' height="160" width="340">
+  <div class='card-block'>
+    <img alt='' class='card-img-profile' src='https://it.gravatar.com/userimage/3434071/205a00fc16ae537b26b56f40790910fe.jpg?size=140'>
+    <h4 class='card-title'>
+      Piyush Kachhadiya
+      <small>Database Handler</small>
+    </h4>
+    <div class='card-links'>
+      <a class='fa fa-facebook' href='https://www.facebook.com/piyush.kachhadiya.52'></a>
+      <a class='fa fa-envelope' href='mailto:piyushpatel281097@gmail.com'></a>
+    </div>
+  </div>
+</div>
+<div class='card card-profile text-center'>
+  <img alt='' class='card-img-top' src='data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==' height="160" width="340">
+  <div class='card-block'>
+    <img alt='' class='card-img-profile' src='https://it.gravatar.com/userimage/3434071/205a00fc16ae537b26b56f40790910fe.jpg?size=140'>
+    <h4 class='card-title'>
+      Niki Taviyad
+      <small>Front-End Developer</small>
+    </h4>
+    <div class='card-links'>
+      <a class='fa fa-twitter' href='https://twitter.com/NikiTaviyad'></a>
+      <a class='fa fa-facebook' href='https://www.facebook.com/nikki.taviyad'></a>
+      <a class='fa fa-envelope' href='mailto:nikkitaviyad@gmail.com'></a>      
+    </div>
+  </div>
+</div>
+<div class='card card-profile text-center'>
+        <img alt='' class='card-img-top' src='data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==' height="160" width="340">  
+  <div class='card-block'>
+    <img alt='' class='card-img-profile' src='https://it.gravatar.com/userimage/3434071/205a00fc16ae537b26b56f40790910fe.jpg?size=140'>
+    <h4 class='card-title'>
+      Vandana Bariya
+      <small>Content Creator</small>
+    </h4>
+    <div class='card-links'>
+      <a class='fa fa-twitter' href='https://twitter.com/vandana_bariya'></a>
+      <a class='fa fa-facebook' href='https://www.facebook.com/vandubariya'></a>
+      <a class='fa fa-envelope' href='mailto:vandanabariya567@gmail.com'></a>
+    </div>
+  </div>
+</div>
+</div>
+
+
+</div>
+{% endblock %}

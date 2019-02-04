@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+
+
+{% endblock meta %}
+
+{% block title %}
+
+Services - {{ block.super }}
+
+{% endblock title %}
+{% block content %}
+<section class="jumbotron text-center">
+    <div class="container">
+      <h1 class="jumbotron-heading">Services @Stocker</h1>
+      <p class="lead text-muted">We provide services for Data Analysis and Equity Prediction.</p>
+    </div>
+  </section>
+<div class="container">
+    <div class="album py-3 ">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card mb-4 box-shadow" style="border: none;">
+                    <img class="card-img-top" src="{% static "images/icons/search.svg" %}" height="160" width="160">
+                    <div class="card-body">
+                        <center> <h5 class="card-title">Search Equity</h5> </center>
+                        <center><p class="card-text">Choose between more than 1500+ NSE Listed Equities.</p> </center>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card mb-4 box-shadow" style="border: none;">
+                    <img class="card-img-top" src="{% static "images/icons/10yeardata.svg" %}" height="160" width="160">
+                    <div class="card-body">
+                       <center> <h5 class="card-title">10+ Years Data</h5> </center>
+                       <center> <p class="card-text">Understand cyclicality of businesses by seeing their performances over long term.</p> </center>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                    <div class="card mb-4 box-shadow" style="border: none;">
+                        <img class="card-img-top" src="{% static "images/icons/watchlist.svg" %}" height="160" width="160">
+                        <div class="card-body">
+                           <center> <h5 class="card-title">Watchlist</h5> </center>
+                           <center> <p class="card-text">Add stocks to watchlist for a personalization</p> </center>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                        <div class="card mb-4 box-shadow" style="border: none;">
+                            <img class="card-img-top" src="{% static "images/icons/datavisualization.svg" %}" height="160" width="160">
+                            <div class="card-body">
+                               <center> <h5 class="card-title">Data Visualization</h5> </center>
+                               <center> <p class="card-text">Visualization Analysis of Equity Data by Charts.</p> </center>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                <div class="card mb-4 box-shadow" style="border: none;">
+                    <img class="card-img-top" src="{% static "images/icons/sentimentanalysis.svg" %}" height="160" width="160">
+                    <div class="card-body">
+                       <center> <h5 class="card-title">Peer Recommendations</h5> </center>
+                       <center> <p class="card-text">Suggestions based on cyclicality of businesses by seeing their performances over long term.</p> </center>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="col-md-4">
+                    <div class="card mb-4 box-shadow" style="border: none;">
+                        <img class="card-img-top" src="{% static "images/icons/news.svg" %}" height="160" width="160">
+                        <div class="card-body">
+                           <center> <h5 class="card-title">News</h5> </center>
+                           <center> <p class="card-text">Get tailor made news feed of all the new announcements, results and current happenings.</p> </center>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="col-md-4">
+                        <div class="card mb-4 box-shadow" style="border: none;">
+                            <img class="card-img-top" src="{% static "images/icons/exportdata.svg" %}" height="160" width="160">
+                            <div class="card-body">
+                               <center> <h5 class="card-title">Export Data</h5> </center>
+                               <center> <p class="card-text">Export data into structured excel sheets.</p> </center>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card mb-4 box-shadow" style="border: none;">
+                            <img class="card-img-top" src="{% static "images/icons/sms.svg" %}" height="160" width="160">
+                            <div class="card-body">
+                               <center> <h5 class="card-title">15 Min Equity Updates</h5> </center>
+                               <center> <p class="card-text">Whatsapp/SMS based equity updates</p> </center>
+                            </div>
+                        </div>
+                        
+                    </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
