@@ -1,0 +1,547 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block meta %}
+		<!-- <meta http-equiv="refresh" content="30"> -->
+		<script src="https://www.amcharts.com/lib/4/core.js"></script>
+		<script src="https://www.amcharts.com/lib/4/charts.js"></script>
+		<script src="https://www.amcharts.com/lib/4/themes/spiritedaway.js"></script>
+		<script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+{% endblock meta %}
+
+{% block title %}
+Quote : {{ x.symbol }} - {{ block.super }}
+{% endblock title %}
+{% block content %}
+<div class="container">
+<style>
+	.borderless td, .borderless th {
+	border: none;
+	} 
+	body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+#chartOpen,#chartClose,#chartHigh,#chartLow,#chartOC,#chartHL {
+  width: 100%;
+  height: 500px;
+}
+</style>
+<div class="jumbotron">
+	<center>
+		<h2 class="display-4">{{x.companyName}}</h2>
+	</center>
+	<div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
+		<table class='table borderless'>
+			<tr>
+				<td><b>Symbol :</b> {{x.symbol}}</td>
+				<td><b>Series :</b> {{x.series}}</td>
+				<td><b>ISIN :</b> {{x.isinCode}}</td>
+				<td><b>Status :</b> {{x.css_status_desc}}</td>
+			</tr>
+		</table>
+	</div>
+	<hr class="my-4">
+	<div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
+		<table class='table borderless'>
+			<tr>
+				<td colspan="2">
+					<h3>
+						<center><strong>Current Price</strong><br><br>{{x.lastPrice}}
+					</h3>
+					</center>
+				</td>
+				<td colspan="2">
+					<h3>
+						<center><strong>Predicted Price</strong><br><br>{{x.lastPrice}}
+					</h3>
+					</center>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<center>Change</center>
+				</th>
+				<th>
+					<center>% Change</center>
+				</th>
+				<th>
+					<center>P. Change</center>
+				</th>
+				<th>
+					<center>P. % Change</center>
+				</th>
+			</tr>
+			<tr>
+				{% if changeQuote > 0 %}
+				<td style="color:green">
+					<center><img src="{% static "/images/arrow_ticker_up.gif" %}">&nbsp;{{x.change}}</center>
+				</td>
+				<td style="color:green">
+					<center>{{x.pChange}} %</center>
+				</td>
+				<td style="color:green">
+					<center><img src="{% static "/images/arrow_ticker_up.gif" %}">&nbsp;{{x.change}}</center>
+				</td>
+				<td style="color:green">
+					<center>{{x.pChange}} %</center>
+				</td>
+				{% else %}
+				<td style="color:red">
+					<center><img src="{% static "/images/arrow_ticker_down.gif" %}">&nbsp;{{x.change}}</center>
+				</td>
+				<td style="color:red">
+					<center>{{x.pChange}} %</center>
+				</td>
+				<td style="color:red">
+					<center><img src="{% static "/images/arrow_ticker_down.gif" %}">&nbsp;{{x.change}}</center>
+				</td>
+				<td style="color:red">
+					<center>{{x.pChange}} %</center>
+				</td>
+				{% endif %}  
+			</tr>
+		</table>
+	</div>
+</div>
+
+<div class="container">
+		<div class="card">
+		  <div class="card-body">
+			<h4 class="card-title">Stock: {{ x.symbol }} - Data visualization</h4>
+			<h6 class="card-subtitle text-muted">Card subtitle</h6>
+			<hr>
+			<div align="center">
+				  <form method="GET">{% csrf_token %}
+					Select time period:
+					From:
+					<input id="start_date" type="date" name="start_date" value="{{start_date}}">
+					{% if errors.start_date %}
+						<span class="error">{{ errors.start_date }}</span>
+					{% endif %}
+					To:
+					<input id="end_date" type="date" name="end_date" value="{{end_date}}">
+					{% if errors.end_date %}
+						<span class="error">{{ errors.end_date }}</span>
+					{% endif %}
+					<button type="submit" class="btn btn-primary">Submit</button>
+				  </form>
+			</div>
+			<hr>
+			<div class="container mt-3">
+		 <!-- Nav tabs -->
+		<ul class="nav nav-tabs">
+		  <li class="nav-item">
+			<a class="nav-link active" href="#open">Open</a>
+		  </li>
+		  <li class="nav-item">
+			<a class="nav-link" href="#close">Close</a>
+		  </li>
+		  <li class="nav-item">
+			<a class="nav-link" href="#high">High</a>
+		  </li>
+		  <li class="nav-item">
+			<a class="nav-link" href="#low">Low</a>
+		  </li>
+		  <li class="nav-item">
+			<a class="nav-link" href="#oc">Open - Close</a>
+		  </li>
+		  <li class="nav-item">
+			<a class="nav-link" href="#hl">High - Low </a>
+		  </li>    
+		</ul>
+	  
+		<!-- Tab panes -->
+		<div class="tab-content">
+		  <div id="open" class="container tab-pane active"><br>
+			  <div id="chartOpen"></div>
+		  </div>
+		  <div id="close" class="container tab-pane fade"><br>
+			  <div id="chartClose"></div>
+		  </div>
+		  <div id="high" class="container tab-pane fade"><br>
+			  <div id="chartHigh"></div>
+		  </div>
+		  <div id="low" class="container tab-pane fade"><br>
+			  <div id="chartLow"></div>
+		  </div>
+		  <div id="oc" class="container tab-pane fade"><br>
+			  <div id="chartOC"></div>
+		  </div>
+		  <div id="hl" class="container tab-pane fade"><br>
+			  <div id="chartHL"></div>
+		  </div>
+		  
+		</div>
+	  </div>
+	  
+	  <script>
+	  $(document).ready(function(){
+		$(".nav-tabs a").click(function(){
+		  $(this).tab('show');
+		});
+	  });
+	  </script>
+	  
+		  </div>
+		</div>
+	  </div>
+	  
+	  <script>
+		  // Themes begin
+		  am4core.useTheme(am4themes_spiritedaway);
+		  am4core.useTheme(am4themes_animated);
+		  // Themes end
+		  
+		  // Create chart instance
+		  var chart = am4core.create("chartOpen", am4charts.XYChart);
+		  
+		  // Add data
+		  dataset = "{{ contextOpen }}";
+		  dataset = JSON.parse(dataset.replace(/&quot;/g,'"'));
+		  chart.data = dataset 
+		  //console.log(chart.data)
+		  // Create axes
+		  var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+		  var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+		  
+		  // Create series
+		  var series = chart.series.push(new am4charts.LineSeries());
+		  series.dataFields.valueY = "Open";
+		  series.dataFields.dateX = "Date";
+		  series.tooltipText = "{Open}"
+		  series.strokeWidth = 2;
+		  series.minBulletDistance = 15;
+		  
+		  // Drop-shaped tooltips
+		  series.tooltip.background.cornerRadius = 20;
+		  series.tooltip.background.strokeOpacity = 0;
+		  series.tooltip.pointerOrientation = "vertical";
+		  series.tooltip.label.minWidth = 40;
+		  series.tooltip.label.minHeight = 40;
+		  series.tooltip.label.textAlign = "middle";
+		  series.tooltip.label.textValign = "middle";
+		  
+		  // Make bullets grow on hover
+		  var bullet = series.bullets.push(new am4charts.CircleBullet());
+		  bullet.circle.strokeWidth = 2;
+		  bullet.circle.radius = 4;
+		  bullet.circle.fill = am4core.color("#fff");
+		  
+		  var bullethover = bullet.states.create("hover");
+		  bullethover.properties.scale = 1.3;
+		  
+		  // Make a panning cursor
+		  chart.cursor = new am4charts.XYCursor();
+		  chart.cursor.behavior = "panXY";
+		  chart.cursor.xAxis = dateAxis;
+		  chart.cursor.snapToSeries = series;
+		  
+		  // Create vertical scrollbar and place it before the value axis
+		  chart.scrollbarY = new am4core.Scrollbar();
+		  chart.scrollbarY.parent = chart.leftAxesContainer;
+		  chart.scrollbarY.toBack();
+		  
+		  // Create a horizontal scrollbar with previe and place it underneath the date axis
+		  chart.scrollbarX = new am4charts.XYChartScrollbar();
+		  chart.scrollbarX.series.push(series);
+		  chart.scrollbarX.parent = chart.bottomAxesContainer;
+		  
+		  chart.events.on("ready", function () {
+			dateAxis.zoom({start:0.79, end:1});
+		  });
+	  </script>
+	  <script>
+		  // Themes begin
+		  am4core.useTheme(am4themes_spiritedaway);
+		  am4core.useTheme(am4themes_animated);
+		  // Themes end
+		  
+		  // Create chart instance
+		  var chart = am4core.create("chartClose", am4charts.XYChart);
+		  
+		  // Add data
+		  dataset = "{{ contextClose }}";
+		  dataset = JSON.parse(dataset.replace(/&quot;/g,'"'));
+		  chart.data = dataset 
+		  //console.log(chart.data)
+		  // Create axes
+		  var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+		  var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+		  
+		  // Create series
+		  var series = chart.series.push(new am4charts.LineSeries());
+		  series.dataFields.valueY = "Close";
+		  series.dataFields.dateX = "Date";
+		  series.tooltipText = "{Close}"
+		  series.strokeWidth = 2;
+		  series.minBulletDistance = 15;
+		  
+		  // Drop-shaped tooltips
+		  series.tooltip.background.cornerRadius = 20;
+		  series.tooltip.background.strokeOpacity = 0;
+		  series.tooltip.pointerOrientation = "vertical";
+		  series.tooltip.label.minWidth = 40;
+		  series.tooltip.label.minHeight = 40;
+		  series.tooltip.label.textAlign = "middle";
+		  series.tooltip.label.textValign = "middle";
+		  
+		  // Make bullets grow on hover
+		  var bullet = series.bullets.push(new am4charts.CircleBullet());
+		  bullet.circle.strokeWidth = 2;
+		  bullet.circle.radius = 4;
+		  bullet.circle.fill = am4core.color("#fff");
+		  
+		  var bullethover = bullet.states.create("hover");
+		  bullethover.properties.scale = 1.3;
+		  
+		  // Make a panning cursor
+		  chart.cursor = new am4charts.XYCursor();
+		  chart.cursor.behavior = "panXY";
+		  chart.cursor.xAxis = dateAxis;
+		  chart.cursor.snapToSeries = series;
+		  
+		  // Create vertical scrollbar and place it before the value axis
+		  chart.scrollbarY = new am4core.Scrollbar();
+		  chart.scrollbarY.parent = chart.leftAxesContainer;
+		  chart.scrollbarY.toBack();
+		  
+		  // Create a horizontal scrollbar with previe and place it underneath the date axis
+		  chart.scrollbarX = new am4charts.XYChartScrollbar();
+		  chart.scrollbarX.series.push(series);
+		  chart.scrollbarX.parent = chart.bottomAxesContainer;
+		  
+		  chart.events.on("ready", function () {
+			dateAxis.zoom({start:0.79, end:1});
+		  });
+	  </script>
+	  <script>
+		  // Themes begin
+		  am4core.useTheme(am4themes_spiritedaway);
+		  am4core.useTheme(am4themes_animated);
+		  // Themes end
+		  
+		  // Create chart instance
+		  var chart = am4core.create("chartHigh", am4charts.XYChart);
+		  
+		  // Add data
+		  dataset = "{{ contextHigh }}";
+		  dataset = JSON.parse(dataset.replace(/&quot;/g,'"'));
+		  chart.data = dataset 
+		  //console.log(chart.data)
+		  // Create axes
+		  var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+		  var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+		  
+		  // Create series
+		  var series = chart.series.push(new am4charts.LineSeries());
+		  series.dataFields.valueY = "High";
+		  series.dataFields.dateX = "Date";
+		  series.tooltipText = "{High}"
+		  series.strokeWidth = 2;
+		  series.minBulletDistance = 15;
+		  
+		  // Drop-shaped tooltips
+		  series.tooltip.background.cornerRadius = 20;
+		  series.tooltip.background.strokeOpacity = 0;
+		  series.tooltip.pointerOrientation = "vertical";
+		  series.tooltip.label.minWidth = 40;
+		  series.tooltip.label.minHeight = 40;
+		  series.tooltip.label.textAlign = "middle";
+		  series.tooltip.label.textValign = "middle";
+		  
+		  // Make bullets grow on hover
+		  var bullet = series.bullets.push(new am4charts.CircleBullet());
+		  bullet.circle.strokeWidth = 2;
+		  bullet.circle.radius = 4;
+		  bullet.circle.fill = am4core.color("#fff");
+		  
+		  var bullethover = bullet.states.create("hover");
+		  bullethover.properties.scale = 1.3;
+		  
+		  // Make a panning cursor
+		  chart.cursor = new am4charts.XYCursor();
+		  chart.cursor.behavior = "panXY";
+		  chart.cursor.xAxis = dateAxis;
+		  chart.cursor.snapToSeries = series;
+		  
+		  // Create vertical scrollbar and place it before the value axis
+		  chart.scrollbarY = new am4core.Scrollbar();
+		  chart.scrollbarY.parent = chart.leftAxesContainer;
+		  chart.scrollbarY.toBack();
+		  
+		  // Create a horizontal scrollbar with previe and place it underneath the date axis
+		  chart.scrollbarX = new am4charts.XYChartScrollbar();
+		  chart.scrollbarX.series.push(series);
+		  chart.scrollbarX.parent = chart.bottomAxesContainer;
+		  
+		  chart.events.on("ready", function () {
+			dateAxis.zoom({start:0.79, end:1});
+		  });
+	  </script>
+	  <script>
+		  // Themes begin
+		  am4core.useTheme(am4themes_spiritedaway);
+		  am4core.useTheme(am4themes_animated);
+		  // Themes end
+		  
+		  // Create chart instance
+		  var chart = am4core.create("chartLow", am4charts.XYChart);
+		  
+		  // Add data
+		  dataset = "{{ contextLow }}";
+		  dataset = JSON.parse(dataset.replace(/&quot;/g,'"'));
+		  chart.data = dataset 
+		  //console.log(chart.data)
+		  // Create axes
+		  var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+		  var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+		  
+		  // Create series
+		  var series = chart.series.push(new am4charts.LineSeries());
+		  series.dataFields.valueY = "Low";
+		  series.dataFields.dateX = "Date";
+		  series.tooltipText = "{Low}"
+		  series.strokeWidth = 2;
+		  series.minBulletDistance = 15;
+		  
+		  // Drop-shaped tooltips
+		  series.tooltip.background.cornerRadius = 20;
+		  series.tooltip.background.strokeOpacity = 0;
+		  series.tooltip.pointerOrientation = "vertical";
+		  series.tooltip.label.minWidth = 40;
+		  series.tooltip.label.minHeight = 40;
+		  series.tooltip.label.textAlign = "middle";
+		  series.tooltip.label.textValign = "middle";
+		  
+		  // Make bullets grow on hover
+		  var bullet = series.bullets.push(new am4charts.CircleBullet());
+		  bullet.circle.strokeWidth = 2;
+		  bullet.circle.radius = 4;
+		  bullet.circle.fill = am4core.color("#fff");
+		  
+		  var bullethover = bullet.states.create("hover");
+		  bullethover.properties.scale = 1.3;
+		  
+		  // Make a panning cursor
+		  chart.cursor = new am4charts.XYCursor();
+		  chart.cursor.behavior = "panXY";
+		  chart.cursor.xAxis = dateAxis;
+		  chart.cursor.snapToSeries = series;
+		  
+		  // Create vertical scrollbar and place it before the value axis
+		  chart.scrollbarY = new am4core.Scrollbar();
+		  chart.scrollbarY.parent = chart.leftAxesContainer;
+		  chart.scrollbarY.toBack();
+		  
+		  // Create a horizontal scrollbar with previe and place it underneath the date axis
+		  chart.scrollbarX = new am4charts.XYChartScrollbar();
+		  chart.scrollbarX.series.push(series);
+		  chart.scrollbarX.parent = chart.bottomAxesContainer;
+		  
+		  chart.events.on("ready", function () {
+			dateAxis.zoom({start:0.79, end:1});
+		  });
+	  </script> 
+	  <script>
+	  // Themes begin
+	  am4core.useTheme(am4themes_animated);
+	  // Themes end
+	  
+	  var chart = am4core.create("chartOC", am4charts.XYChart);
+	  chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
+	  
+	  dataset = "{{ contextOC }}";
+	  dataset = JSON.parse(dataset.replace(/&quot;/g,'"'));
+	  chart.data = dataset
+	  
+	  var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+	  
+	  var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+	  valueAxis.tooltip.disabled = true;
+	  
+	  var series = chart.series.push(new am4charts.LineSeries());
+	  series.dataFields.dateX = "Date";
+	  series.dataFields.openValueY = "Open";
+	  series.dataFields.valueY = "Close";
+	  series.tooltipText = "Open: {openValueY.value} Close: {valueY.value}";
+	  series.sequencedInterpolation = true;
+	  series.fillOpacity = 0.3;
+	  series.defaultState.transitionDuration = 1000;
+	  series.tensionX = 0.8;
+	  
+	  var series2 = chart.series.push(new am4charts.LineSeries());
+	  series2.dataFields.dateX = "Date";
+	  series2.dataFields.valueY = "Open";
+	  series2.sequencedInterpolation = true;
+	  series2.defaultState.transitionDuration = 1500;
+	  series2.stroke = chart.colors.getIndex(6);
+	  series2.tensionX = 0.8;
+	  
+	  chart.cursor = new am4charts.XYCursor();
+	  chart.cursor.xAxis = dateAxis;
+	  chart.scrollbarX = new am4core.Scrollbar();
+	  </script>
+	  <script>
+	  // Themes begin
+	  am4core.useTheme(am4themes_animated);
+	  // Themes end
+	  
+	  var chart = am4core.create("chartHL", am4charts.XYChart);
+	  chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
+	  
+	  dataset = "{{ contextHL }}";
+	  dataset = JSON.parse(dataset.replace(/&quot;/g,'"'));
+	  chart.data = dataset
+	  
+	  var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+	  
+	  var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+	  valueAxis.tooltip.disabled = true;
+	  
+	  var series = chart.series.push(new am4charts.LineSeries());
+	  series.dataFields.dateX = "Date";
+	  series.dataFields.openValueY = "High";
+	  series.dataFields.valueY = "Low";
+	  series.tooltipText = "High: {openValueY.value} Low: {valueY.value}";
+	  series.sequencedInterpolation = true;
+	  series.fillOpacity = 0.3;
+	  series.defaultState.transitionDuration = 1000;
+	  series.tensionX = 0.8;
+	  
+	  var series2 = chart.series.push(new am4charts.LineSeries());
+	  series2.dataFields.dateX = "Date";
+	  series2.dataFields.valueY = "High";
+	  series2.sequencedInterpolation = true;
+	  series2.defaultState.transitionDuration = 1500;
+	  series2.stroke = chart.colors.getIndex(6);
+	  series2.tensionX = 0.8;
+	  
+	  chart.cursor = new am4charts.XYCursor();
+	  chart.cursor.xAxis = dateAxis;
+	  chart.scrollbarX = new am4core.Scrollbar();
+	  </script>
+
+<div class="card-title">
+	<center>
+		<h2> In The News </h2>
+	</center>
+	<div class="card-columns">
+		{% for x in quoteNews.articles %}
+		<div class="card">
+			<img class="card-img-top" src="{{x.urlToImage}}">
+			<div class="card-body">
+				<h5 class="card-title">{{x.title}}</h5>
+				<p class="card-text">{{x.description}}</p>
+				<a href="{{x.url}}" class="btn btn-primary">Read More</a>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+</div>
+<br/>
+</div>
+{% endblock %}
