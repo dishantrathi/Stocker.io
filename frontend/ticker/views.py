@@ -8,14 +8,18 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from django.template import loader
 
-from ticker.backend import merge_dicts, tickerIndices, getGL, getHomeNews, eqlist
+from ticker.backend import merge_dicts, tickerIndices, getGL, getHomeNews, eqlist, equitydataAPI, equitywiki, equitydataRefresh, equitydataNews, equitydataPeer, equitydataCharts, equitydataChartsdef
+from ticker.predictor import predictorModel
 
 import requests
 from nsetools import Nse
 from pprint import pprint
 nse = Nse()
 
-from ticker.predictor import predictorModel
+#################################################
+urlmain = 'http://127.0.0.1:8000/quoteAPI/v1/{}'#
+#################################################
+
 
 def home(request):
     context_all = merge_dicts(tickerIndices(), getGL(), getHomeNews())
@@ -34,14 +38,73 @@ def careers(request):
 def pricing(request):
     return render(request, 'pricing.html', {})
 
+
 # Services
 def services(request):
     return render(request, 'services.html', {})
+
+
+# API
+
+def quoteAPI(request,symbol):
+    if nse.is_valid_code(symbol):
+        context_all = equitydataAPI(symbol)
+        return JsonResponse(context_all, safe=False)
+    else:
+        return handler404(request)
+
+  
+
 
 # Pages
 def equitylist(request):
     data = eqlist()
     return render(request, 'equitylist.html', context= {'data':data})
+
+
+# Equity
+
+def autoRefreshEqu(request,symbol):
+    if nse.is_valid_code(symbol):
+        context_all = equitydataRefresh(symbol)
+        return render(request,'equity/autorefequ.html',context_all )
+
+
+def equity(request,symbol):
+    import pandas as pd
+    from datetime import datetime, date, time
+    from nsepy import get_history
+        
+        
+    if nse.is_valid_code(symbol):
+        x = equitydataAPI(symbol)
+        x = x['data'][0]
+
+        start_date = request.GET.get('start_date')
+        end_date = request.GET.get('end_date')
+        
+        if start_date and end_date:
+            context = equitydataCharts(symbol,start_date,end_date)
+        else:
+            context = equitydataChartsdef(symbol)
+        
+        context_all = {
+            'symbol': symbol,
+            'compDet': equitywiki(symbol),
+            'quoteNews' : equitydataNews(symbol),
+            'peerlist': equitydataPeer(symbol),
+            'x': x,          
+            'quote':quote,
+            #'changeQuote':changeQuote,
+            }
+
+        context_all = merge_dicts(context, context_all)
+        
+        
+        template = loader.get_template('equity/equity.html')
+        response_body = template.render(context_all,request)
+        return HttpResponse(response_body)
+
 
 '''
 def quote(request):
@@ -76,6 +139,8 @@ def quote(request):
     else:
         return handler404(request)
 
+  
+
 
 def quote_data(request, symbol):
     x = nse.get_quote(symbol)
@@ -108,7 +173,7 @@ def quote_data(request, symbol):
         'url2':url2,
         'imgurl':imgurl
     }
-
+    
     import json
     peerurl = ("https://nseindia.com/live_market/dynaContent/live_watch/get_quote/ajaxPeerCompanies.jsp?symbol={}").format(symbol)
     r  = requests.get(peerurl)
@@ -135,6 +200,10 @@ def quote_data(request, symbol):
     peerlist = dict(zip(keys, values))
 
     print(peerlist)
+    
+    
+    
+    
     cURL = "https://newsapi.org/v2/everything?q="+ cName +"&apiKey=2c9f31acb8cc466bbf2647cf4170b81d"
     quoteNewsSet = (requests.get(cURL)).json
 
@@ -179,8 +248,10 @@ def quote_data(request, symbol):
         'dt_now':dt_now,
         'compDet':compDet }
     template = loader.get_template('quote-data.html')
-    response_body = template.render(context_all)
+    response_body = template.render(context_all,request)
     return HttpResponse(response_body)
+
+    
 #'''
 #except ConnectionAbortedError:
 #    return HttpResponse(''' ConnectionAbortedError ''')
@@ -188,8 +259,6 @@ def quote_data(request, symbol):
 #except :
 #    return render(request, 'server-error.html', {'symbol':symbol})
 #'''
-def search(request):
-    return render(request, 'search.html', {'sym':''})
 
 def api_req(request, symbol):
     context_all = predictorModel(symbol)
@@ -240,6 +309,8 @@ def chartstd(request):
     return render(request, 'chartstd/chartstd.html', context_all)
 
 
+
+# Authentication
 
 def login_user(request):
     if request.method == "POST":
@@ -302,7 +373,8 @@ def password_change(request):
 
     return render(request,"authenticate/password_change.html",{'form':form})
 
-    
+# Error Handlers
+
 def handler404(request):
     return render(request, '404.html', status=404)
 

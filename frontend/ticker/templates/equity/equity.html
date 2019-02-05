@@ -3,6 +3,7 @@
 {% load static %}
 {% block meta %}
 		<!-- <meta http-equiv="refresh" content="30"> -->
+		
 		<script src="https://www.amcharts.com/lib/4/core.js"></script>
 		<script src="https://www.amcharts.com/lib/4/charts.js"></script>
 		<script src="https://www.amcharts.com/lib/4/themes/spiritedaway.js"></script>
@@ -11,13 +12,23 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+		<script>
+		$.ajax({
+			url: "{% url 'autoRefreshEqu' symbol=symbol %}",
+			success: function(data) {
+			$('#autoupdate').html(data);
+			}
+		});
+		</script>
+		
+
 {% endblock meta %}
 
 {% block title %}
 Quote : {{ x.symbol }} - {{ block.super }}
 {% endblock title %}
 {% block content %}
-
+<div>
 <style>
 .table-bordered td, .table-bordered th {
   border: 0px solid #ffffff;
@@ -124,50 +135,31 @@ input:checked + .slider:before {
 						<div class="row">
 							<div class="col-md-6">
 									<div class="card mb-4 box-shadow">
-							<div class="card text-center">
-								<div class="card-header">
-									<h2 class="alignleft">Current Price</h2>
-									<p class="alignright"><label class="switch"> <input type="checkbox" > <span class="slider"></span></label></p>
-									<!--p class="alignright"><label class="switch"> <input type="checkbox" checked> <span class="slider"></span></label></p-->
+											<div class="card text-center">
+													<div class="card-header">
+																	<h2 class="alignleft">Current Price</h2>
+																	<p class="alignright"><label class="switch"> <input type="checkbox" > <span class="slider"></span></label></p>
+																	<!--p class="alignright"><label class="switch"> <input type="checkbox" checked> <span class="slider"></span></label></p-->
+													</div>
+												<div id="autoupdate">
+									
+												</div>
+											</div>
 								</div>
-								<div class="card-body">
-								  <!--h5 class="card-title"></h5-->
-								  <p class="card-text">
-										<table class="table table-bordered">
-												{% if changeQuote > 0 %}
-													  <td class="m" rowspan="2" style="color:green">
-														 <strong style="font-size: 40px;">
-															<center>₹ {{x.lastPrice |intcomma}} </center>
-														 </strong> 
-														 <center><img src="{% static "/images/arrow_ticker_up.gif" %}">&nbsp;₹ {{x.change |intcomma}} ({{x.pChange |intcomma}} %)</center>
-													  </td>
-													  {% else %}
-													  <td class="m" rowspan="2" style="color:red">
-														 <strong style="font-size: 40px;">
-															<center>₹ {{x.lastPrice |intcomma}} </center>
-														 </strong>
-														 <center><img src="{% static "/images/arrow_ticker_down.gif" %}">&nbsp;₹ {{x.change |intcomma}} ({{x.pChange |intcomma}} %)</center>
-													  </td>
-													  {% endif %}
-											 </table>
-								</div>
-								<div class="card-footer text-muted">
-									<p class="alignleft">Last Updated at {{dt_now}} <p class="alignright"> <span class="reload"><a href="/quote_data/{{x.symbol}}">↻</a></span></p>
-								</div>
-							  </div>
 							</div>
-						</div>
+						
 							<div class="col-md-6">
 									<div class="card mb-4 box-shadow">
 											<img class="card-img-top" src="{{compDet.imgurl}}" height="200" width="340">
 											<div class="card-body">
-												<!--h5 class="card-title">{{compDet.title}}</h5-->
+												<center><h5 class="card-title">{{x.wikiname}}</h5></center>
+											  <center><strong><p class="card-text">Company Type : {{x.companytype}}</p></strong></center>
 												<p class="card-text">{{compDet.extract | slice:":500"}}...</p>
 												
 											<div class="d-flex justify-content-between align-items-center">
 													
 												<div class="btn-group">
-														<a href="{{compDet.url2}}" ><button type="button" class="btn btn-sm btn-outline-primary">Read More</button></a>
+														<a target="_blank" href="{{compDet.url2}}" ><button type="button" class="btn btn-sm btn-outline-primary">Read More</button></a>
 												</div>
 											</div>
 										</div>
@@ -175,7 +167,7 @@ input:checked + .slider:before {
 							</div>
 						</div>
 				</div>
-		</div>
+	</div>
 <br>
 		<div class="container">
 				<div class="col-md-12 blog-main">
@@ -1075,6 +1067,7 @@ input:checked + .slider:before {
 				</div>
 	  </div>
 
+			</div>
 </div>
 
 {% endblock %}

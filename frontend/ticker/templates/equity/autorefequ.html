@@ -1,0 +1,27 @@
+{% load humanize %}
+{% load static %}
+
+<div class="card-body">
+      <!--h5 class="card-title"></h5-->
+      <p class="card-text">
+            <table class="table table-bordered">
+                    {% if changeQuote > 0 %}
+                          <td class="m" rowspan="2" style="color:green">
+                             <strong style="font-size: 40px;">
+                                <center>₹ {{lastPrice |intcomma}} </center>
+                             </strong> 
+                             <center><img src="{% static "/images/arrow_ticker_up.gif" %}">&nbsp;₹ {{change |intcomma}} ({{pChange |intcomma}} %)</center>
+                          </td>
+                          {% else %}
+                          <td class="m" rowspan="2" style="color:red">
+                             <strong style="font-size: 40px;">
+                                <center>₹ {{lastPrice |intcomma}} </center>
+                             </strong>
+                             <center><img src="{% static "/images/arrow_ticker_down.gif" %}">&nbsp;₹ {{change |intcomma}} ({{pChange |intcomma}} %)</center>
+                          </td>
+                          {% endif %}
+                 </table>
+</div>
+<div class="card-footer text-muted">
+    <p class="alignleft">Last Updated at {{lastUpdateTime}} <p class="alignright"> <span class="reload"><a href="#">↻</a></span></p>
+</div>
